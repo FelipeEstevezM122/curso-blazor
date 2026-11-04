@@ -1,0 +1,56 @@
+@page "/catalogo"
+
+<div class="flex items-center justify-center border-2 flex-col w-10vw h-10vw p-4 m-2">
+@foreach (Cafe cafe in lstcafes)
+{
+    <div>
+        <img src="@cafe.Imagen" class="w-full h-full object-cover"/>
+        <h2>@cafe.NombreCafe</h2>
+        <p>@cafe.DescripcionCafe</p>
+        <p class="font-bold text-white bg-green-600 rounded-xl p-3">@cafe.PrecioCafe Bs</p>
+    </div>
+}
+</div>
+
+@code{
+
+    private List<Cafe> lstcafes = new List<Cafe>()
+    {
+        new Cafe()
+        {
+            Imagen = "https://www.divinacocina.es/wp-content/uploads/2015/02/como-hacer-capuchino-casero-facil-cc.jpg",
+            NombreCafe = "Capuchino",
+            DescripcionCafe = "Cafe con leche",
+            PrecioCafe = 2.50m
+        },
+        new Cafe()
+        {
+            Imagen = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-7KDZ0f3R9mjgaDFu26RXK4ujGh8PCkUj3gLsdWf8FL207nnOk1QoBCg&s=10",
+            NombreCafe = "Americano",
+            DescripcionCafe = "Cafe negro",
+            PrecioCafe = 2.00m
+        },
+        new Cafe()
+        {
+            Imagen = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYnJE7c6kWh82k7SzPLl6Ayl8TdQc5YCtmYEwb_shacDo_I8Gn9fXYd9uf&s=10",
+            NombreCafe = "Cortado",
+            DescripcionCafe = "Cafe con leche y espuma",
+            PrecioCafe = 2.75m
+        },
+        new Cafe()
+        {
+            Imagen = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWYFdVq2DhkZHdi_piVkG9g96bOjov7s-rbVFjTiZpyiI4xeckjS_JNm60&s=10",
+            NombreCafe = "Latte",
+            DescripcionCafe = "Cafe con leche y espuma",
+            PrecioCafe = 3.00m
+        }
+    };
+
+    class Cafe{
+
+        public string Imagen {get; set;}
+        public string NombreCafe {get; set;}
+        public string DescripcionCafe {get; set;}
+        public decimal PrecioCafe {get; set;}
+    }   
+}
