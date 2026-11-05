@@ -1,0 +1,48 @@
+@page "/usuario"
+@using sharpness_sharp.Components.UIComponents
+
+<div class="flex flex-col gap-2">
+    @foreach (Usuario user in usuarios)
+    {
+        <div class="w-fit border-2 rounded-md p-4 m-2 ">
+            <h2>@user.Nombre @user.Apellido</h2>
+            <p>Color: @user.Color_Piel</p>
+            <p>Estatura: @user.Estatura m</p>
+            <p>Fecha de nacimiento: @user.Fecha_nac</p>
+            <p>Email: @user.Email</p>
+            <p>Password: @user.Password</p>
+        </div>
+    }
+</div>
+
+@code{
+    public List<Usuario> usuarios = new List<Usuario>
+    {
+        new Usuario("Carlos", "Ramírez", "carlos.ramirez@email.com", "Password123!", "1990-05-15", "Morena clara", 1.75),
+        new Usuario("Lucía", "Fernández", "lucia.fer@email.com", "LuciaPass99", "1995-11-22", "Blanca", 1.62),
+        new Usuario("Mateo", "Gómez", "mateo.gomez@email.com", "Mateo2026!", "1988-02-08", "Trigueña", 1.80),
+        new Usuario("Sofía", "Torres", "sofia.torres@email.com", "SofiSecure#1", "2000-08-30", "Canela", 1.68)
+    };
+    public class Usuario
+    {
+        public string? Nombre { get; set; }
+        public string? Apellido { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? Fecha_nac { get; set; }
+        public string? Color_Piel { get; set; }
+        public double Estatura { get; set; }
+
+        public Usuario(string nombre, string apellido, string email, string password, string fecha_nac, string color_piel, double estatura)
+        {
+            Nombre = nombre;
+            Apellido = apellido;
+            Email = email;
+            Password = password;
+            Fecha_nac = fecha_nac;
+            Color_Piel = color_piel;
+            Estatura = estatura;
+        }
+    }
+    
+}
