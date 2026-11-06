@@ -1,8 +1,20 @@
 @page "/catalogo"
 @using sharpness_sharp.Components.UIComponents
 
+
+<h1>Botón</h1>
+<button @onclick="MostrarMensaje" class="ui-btn ui-btn-primary">Púlsame</button>
+
 <div class="min-h-screen bg-gradient-to-br from-stone-50 via-amber-50/40 to-stone-100 px-4 py-8 sm:px-6 lg:px-8">
     <div class="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+
+    @foreach(var mensaje in lstMensajes)
+    {
+        <CofeeCard Imagen="@lstMensajes[0].Imagen" NombreCafe="@lstMensajes[0].NombreCafe" DescripcionCafe="@lstMensajes[0].DescripcionCafe" PrecioCafe="@lstMensajes[0].PrecioCafe"></CofeeCard>
+
+    }
+
     @foreach (Cafe cafe in lstCafes)
     {
         <CofeeCard Imagen="@cafe.Imagen" NombreCafe="@cafe.NombreCafe" DescripcionCafe="@cafe.DescripcionCafe" PrecioCafe="@cafe.PrecioCafe"></CofeeCard>
@@ -10,9 +22,18 @@
     </div>
 </div>
 
-
 @code {
+    List<Cafe> lstMensajes = new();
 
+    void MostrarMensaje()
+    {
+        lstMensajes.Add(new Cafe(
+            imagen: "https://cuplacoffee.com/wp-content/uploads/2025/03/what-is-an-americano-featured.jpg",
+            nombreCafe: "Americano",
+            descripcionCafe: "Espresso diluido con agua caliente.",
+            precioCafe: 20m)
+        );
+    }
     private List<Cafe> lstCafes = new()
 {
     new Cafe(
