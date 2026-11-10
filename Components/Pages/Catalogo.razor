@@ -54,9 +54,9 @@
 
         return Task.CompletedTask;
     }
-    private Task EliminarProducto(Cafe cafeEliminado)
+    private Task EliminarProducto(int Id)
     {
-        Cafe? cafeParaEliminar = _dbService.Cafes.FirstOrDefault(cafe => cafe.Id == cafeEliminado.Id);
+        Cafe? cafeParaEliminar = _dbService.Cafes.FirstOrDefault(cafe => cafe.Id == Id);
         if (cafeParaEliminar is null)
         {
             return Task.CompletedTask;
@@ -64,7 +64,7 @@
 
         _dbService.Cafes.Remove(cafeParaEliminar);
         _dbService.SaveChanges();
-        lstCafes.RemoveAll(cafe => cafe.Id == cafeEliminado.Id);
+        lstCafes.RemoveAll(cafe => cafe.Id == Id);
 
         return Task.CompletedTask;
     }
