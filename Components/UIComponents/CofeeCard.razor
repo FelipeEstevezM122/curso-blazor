@@ -1,17 +1,58 @@
-<div class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-amber-300 hover:shadow-xl active:-translate-y-1 active:scale-[0.98] focus-within:ring-4 focus-within:ring-amber-500/20">
-    <div class="overflow-hidden">
-        <img src="@Imagen" alt="@NombreCafe" class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-    </div>
-    <div class="flex flex-1 flex-col gap-3 p-5">
-        <h2 class="text-xl font-bold text-stone-900 transition-colors duration-200 group-hover:text-amber-800">@NombreCafe</h2>
-        <p class="flex-1 text-sm leading-6 text-stone-600"><b class="font-semibold text-stone-800">Descripción: </b>@DescripcionCafe</p>
-        <p class="inline-flex w-fit items-center rounded-full bg-amber-100 px-4 py-2 font-bold text-amber-900 transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:bg-amber-300 hover:text-amber-950 hover:shadow-md">@PrecioCafe Bs.</p>
-    </div>
-</div>
+@using sharpness_sharp.Data.Models
+<div class="flex flex-col justify-center border-2 w-10vw rounded-md p-4 m-2 gap-2">
+    <input type="text" class="border-2" @bind="Imagen" disabled="@(!ModoEdicion)"/>
+    <img src="@Imagen" class="w-full h-1/2 object-cover rounded-md" />
+    <input class="text-bold text-2xl border-2" type="text" @bind="NombreCafe" disabled="@(!ModoEdicion)"/>
+    <input class="text-bold text-2xl border-2" type="text" @bind="DescripcionCafe"disabled="@(!ModoEdicion)"/>
+    <input class="font-bold text-white bg-green-600 rounded-xl p-3 border-2" type="number" @bind="PrecioCafe" disabled="@(!ModoEdicion)"/>
+ 
+    @if (ModoEdicion)
+    {
+        <button class="font-bold  ui-btn bg-green-300 rounded-xl p-3 border-2" @onclick="() => {
+            CambiarModoEdicion();
+            ActualizarProducto();
+            }">Guardar</button>
+    }
+    else
+    {
+        <button class="font-bold  ui-btn bg-yellow-600 rounded-xl p-3 border-2" @onclick="CambiarModoEdicion">Editar</button>        
+    }
 
+    <button class="font-bold  ui-btn bg-danger-300 rounded-xl p-3 border-2" @onclick="EliminarProducto">Eliminar</button>
+
+</div>
+ 
 @code {
+    private bool ModoEdicion = false;
+ 
+    [Parameter] public int Id {get;set;}
     [Parameter] public string? Imagen { get; set; }
     [Parameter] public string? NombreCafe { get; set; }
     [Parameter] public string? DescripcionCafe { get; set; }
     [Parameter] public decimal PrecioCafe { get; set; }
+ 
+    [Parameter] public EventCallback<Cafe> EnviarNotificacionActualizacion {get;set;}
+    [Parameter] public EventCallback<Cafe> EnviarNotificacionEliminacion {get;set;}
+ 
+    private void CambiarModoEdicion()
+    {
+        ModoEdicion = !ModoEdicion;
+        StateHasChanged();
+    }
+    private Task ActualizarProducto()
+    {
+        EnviarNotificacionActualizacion.InvokeAsync(new()
+        {
+            Id=Id,
+            Imagen = Imagen,
+            NombreCafe = NombreCafe,
+            DescripcionCafe = DescripcionCafe,
+            PrecioCafe = PrecioCafe,
+        });
+        return Task.CompletedTask;
+    }
+    private Task EliminarProducto()
+    {
+        return EnviarNotificacionEliminacion.InvokeAsync(new Cafe { Id = Id });
+    }
 }

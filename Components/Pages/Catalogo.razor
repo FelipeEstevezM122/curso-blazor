@@ -3,26 +3,25 @@
 @using sharpness_sharp.Data
 @using sharpness_sharp.Data.Models
 @inject ApplicationAuthDbContext _dbService
- 
+
 <EditForm FormName="agregar-cafe" Model="@newCafe" OnSubmit="AgregarCafe">
     <InputText @bind-Value="newCafe.Imagen" class="border-2 px-2" placeholder="introduce la url de la imagen"/>
     <InputText @bind-Value="newCafe.NombreCafe" class="border-2 px-2" placeholder="introduce el nombre del cafe"/>
     <InputText @bind-Value="newCafe.DescripcionCafe" class="border-2 px-2" placeholder="introduce la descripcion del cafe"/>
-    <InputNumber @bind-Value="newCafe.PrecioCafe" class="border-2 px-2" placeholder="introduce el precio del cafe"/>
- 
+    <InputNumber @bind-Value="@newCafe.PrecioCafe" class="border-2 px-2" placeholder="introduce el precio del cafe"/>
+
     <button type="submit">Guardar</button>
 </EditForm>
- 
-<div class="min-h-screen bg-gradient-to-br from-stone-50 via-amber-50/40 to-stone-100 px-4 py-8 sm:px-6 lg:px-8">
-    <div class="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+<div class="grid grid-cols-4 gap-4 p-4">
     @foreach (Cafe cafe in lstCafes)
     {
-        <CofeeCard Imagen="@cafe.Imagen" NombreCafe="@cafe.NombreCafe" DescripcionCafe="@cafe.DescripcionCafe" PrecioCafe="@cafe.PrecioCafe"></CofeeCard>
+        <CofeeCard Id="@cafe.Id" Imagen="@cafe.Imagen" NombreCafe="@cafe.NombreCafe" DescripcionCafe="@cafe.DescripcionCafe"
+                    PrecioCafe="@cafe.PrecioCafe" EnviarNotificacionActualizacion="ActualizarProducto"
+                    EnviarNotificacionEliminacion="EliminarProducto"></CofeeCard>
     }
-    </div>
 </div>
 
- 
 @code {
     private Cafe newCafe = new();
     private List<Cafe> lstCafes = new();
@@ -36,6 +35,37 @@
         _dbService.Cafes.Add(newCafe);
         _dbService.SaveChanges();
         newCafe = new();
+        return Task.CompletedTask;
+    }
+ 
+    private Task ActualizarProducto(Cafe cafeEditado)
+    {
+        Cafe cafeParaEditar = _dbService.Cafes.FirstOrDefault(cafe => cafe.Id == cafeEditado.Id);
+        Console.WriteLine(cafeEditado.Id);
+        Console.WriteLine(cafeEditado.NombreCafe);
+        Console.WriteLine(cafeEditado.DescripcionCafe);
+        Console.WriteLine(cafeEditado.PrecioCafe);
+
+        cafeParaEditar.NombreCafe = cafeEditado.NombreCafe;
+        cafeParaEditar.PrecioCafe = cafeEditado.PrecioCafe;
+        cafeParaEditar.DescripcionCafe = cafeEditado.DescripcionCafe;
+
+        _dbService.SaveChanges();
+
+        return Task.CompletedTask;
+    }
+    private Task EliminarProducto(Cafe cafeEliminado)
+    {
+        Cafe? cafeParaEliminar = _dbService.Cafes.FirstOrDefault(cafe => cafe.Id == cafeEliminado.Id);
+        if (cafeParaEliminar is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        _dbService.Cafes.Remove(cafeParaEliminar);
+        _dbService.SaveChanges();
+        lstCafes.RemoveAll(cafe => cafe.Id == cafeEliminado.Id);
+
         return Task.CompletedTask;
     }
 }
